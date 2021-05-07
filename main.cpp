@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
+#include <string>
 using namespace std;
 int menu() {
 	while(true) {
@@ -17,7 +18,7 @@ int menu() {
 	}
 }
 
-void mostrarArreglo(char arreglo[], int tamano) {
+void mostrarArreglo(char* arreglo, int tamano) {
 	for (int i = 0; i < tamano; i++)
 		cout << "['" << arreglo[i]<<"']";
 	cout << endl;
@@ -32,25 +33,37 @@ void mostrarMatriz(char** matriz, int filas,int columnas) {
 	}
 }
 
-char* arrChar () {
-	int cantChars;
-	string caracter;
-	char arreglo[cantChars];
-	cout << "Ingrese la cantidad de caracteres que desee ingresar: " << endl;
-	cin >> cantChars;
-	while(cantChars < 0) {
-		cout << "No se permiten numeros negativos, intente nuevamente!" << endl;
-		cout << "Ingrese la cantidad de caracteres que desee ingresar: " << endl;
-		cin >> cantChars;
+char* arrChar (int cantChars, char* arreglo) {
+	int cont;
+	string acum1= "";
+	string acum2= "";
+	for(int i = 0; i < cantChars; i++) {
+		char temporal = arreglo[i];
+		if (temporal >= 48 && temporal <= 57) {
+			acum1+=temporal;
+		}
+		if(temporal >= 48 && temporal <= 57) {
+			if(arreglo[i+1]>= 48 && arreglo[i+1]<=57) { 
+				acum1+=arreglo[i+1];
+				i++;
+			}
+		}
+		if(temporal == 'D' || temporal == 'U' || temporal == 'R' || temporal == 'L') {
+			cont = stoi(acum1);
+			for(int j = 0; j  < cont; j++) {
+				acum2+=temporal;
+			}
+			acum1="";
+		}
 	}
-	for(int i=0; i < cantChars ; i++) {
-		cout << "Ingrese el caracter: "<<endl;
-		cin >> caracter;
-		caracter = arreglo[i];
+	char arregloResultante[acum2.size()];
+	for(int i = 0; i < acum2.size(); i++) {
+		arregloResultante[i]=acum2.at(i);
 	}
-	cout << "Sus caracteres han sido guardados!" <<endl;
-	cout << "Arreglo: " <<endl;
-	mostrarArreglo(arreglo,cantChars);
+	cout << "Arreglo Resultante: "<<endl;
+	//DEBE SER LITERAL MAYUSCULAS PARA QUE NO EXPLOTE
+	mostrarArreglo(arregloResultante,acum2.size());
+	return arregloResultante;
 }
 
 char** retornarMatriz(int filas,int columnas,int obstaculos) {
@@ -84,7 +97,26 @@ int main(int argc, char** argv) {
 	while(opcion != 4) {
 		switch(opcion=menu()) {
 			case 1: {
-				arrChar();
+				int cantChars;
+				string caracter;
+				char arreglo[cantChars];
+				cout << "Ingrese la cantidad de caracteres que desee ingresar: " << endl;
+				cin >> cantChars;
+				while(cantChars < 0) {
+					cout << "No se permiten numeros negativos, intente nuevamente!" << endl;
+					cout << "Ingrese la cantidad de caracteres que desee ingresar: " << endl;
+					cin >> cantChars;
+				}
+				char* arregloTemp = new char [cantChars];
+				for(int i=0; i < cantChars ; i++) {
+					cout << "Ingrese el caracter: "<<endl;
+					cin >> arreglo[i];
+				}
+				cout << "Sus caracteres han sido guardados!" <<endl;
+				cout << "Arreglo: " <<endl;
+				mostrarArreglo(arreglo,cantChars);
+				cout << endl;
+				arrChar(cantChars,arreglo);
 				break;
 			}
 			case 2: {
